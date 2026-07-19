@@ -33,8 +33,8 @@ function clean(kind:Kind,input:any){
 async function api(req:Request,env:Env,url:URL){
  const parts=url.pathname.split('/').filter(Boolean),kind=parts[2] as Kind,id=Number(parts[3]);
  if(!['cars','goods'].includes(kind)) return response({error:'Not found'},404);
- if(req.method==='GET') return response(await list(env,kind));
  await requireAdmin(req,env);
+ if(req.method==='GET') return response(await list(env,kind));
  if(req.method==='POST'&&!id){const data=clean(kind,await req.json());const keys=columns(kind);const q=`INSERT INTO ${table(kind)} (${keys.join(',')}) VALUES (${keys.map(()=>'?').join(',')}) RETURNING *`;return response(await env.DB.prepare(q).bind(...keys.map(k=>data[k])).first(),201);}
  if(!id) return response({error:'Not found'},404);
  const old:any=await env.DB.prepare(`SELECT * FROM ${table(kind)} WHERE id=?`).bind(id).first(); if(!old)return response({error:'Not found'},404);
