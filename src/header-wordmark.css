@@ -1,11 +1,11 @@
 header{position:sticky}
-.brand img{position:absolute;left:calc(50% - 190px);top:50%;width:150px;height:auto;aspect-ratio:2/1;object-fit:contain;transform:translateY(-50%)}
-.brand .wordmark{display:flex;position:absolute;left:calc(50% + 70px);top:50%;transform:translate(-50%,-50%);flex-direction:column;align-items:center;justify-content:center;color:#101722;line-height:1;text-align:center}
+.brand img{position:absolute;left:calc(50% - 175px);top:50%;width:150px;height:auto;object-fit:contain;transform:translateY(-50%)}
+.brand .wordmark{display:flex;position:absolute;left:calc(50% + 75px);top:50%;transform:translate(-50%,-50%);flex-direction:column;align-items:center;justify-content:center;color:#101722;line-height:1;text-align:center}
 .wordmark b{font-family:Georgia,"Times New Roman",serif;font-size:34px;letter-spacing:.03em}
 .wordmark em{margin-top:7px;font-style:normal;font-size:15px;font-weight:700;letter-spacing:.24em}
 @media(max-width:760px){
-  .brand img{left:calc(50% - 118px);width:105px}
-  .brand .wordmark{left:calc(50% + 48px)}
+  .brand img{left:calc(50% - 113px);width:105px}
+  .brand .wordmark{left:calc(50% + 53px)}
   .wordmark b{font-size:22px}
   .wordmark em{margin-top:4px;font-size:9px;letter-spacing:.18em}
 }
