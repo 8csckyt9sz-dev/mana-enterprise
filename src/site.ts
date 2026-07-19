@@ -1,5 +1,6 @@
 import {store,yen} from './config';
 import './no-manager.css';
+import './logo-size.css';
 type Item=Record<string,any>;
 const app=document.querySelector<HTMLDivElement>('#app')!;
 const header=`<header><a class="brand" href="/"><img src="/assets/logo.png" onerror="this.onerror=null;this.src='/assets/logo-placeholder.svg'" alt="MANA ENTERPRISES"><span>${store.name}</span></a><nav><a href="/">中古車</a><a href="/furniture-appliances">家具・家電</a><a href="#contact">お問い合わせ</a></nav></header>`;
