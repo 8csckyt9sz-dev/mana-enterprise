@@ -1,7 +1,7 @@
-header{height:86px;min-height:86px;padding:0 16px 0 0}
+header{height:120px;min-height:120px;padding:0 16px 0 0}
 .brand img{width:440px;height:auto;aspect-ratio:358/70;object-fit:contain}
 .brand span{display:none}
 @media(max-width:760px){
-  header{height:54px;min-height:54px;padding-right:6px}
+  header{height:70px;min-height:70px;padding-right:6px}
   .brand img{width:275px;height:auto}
 }
