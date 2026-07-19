@@ -1,12 +1,12 @@
 header{position:sticky}
 header .brand{position:absolute;left:50%;top:50%;display:flex;align-items:center;gap:0;transform:translate(-50%,-50%)}
-.brand img{position:static;width:230px;height:auto;object-fit:contain;transform:none}
+.brand img{position:static!important;flex:0 0 230px!important;width:230px!important;min-width:230px!important;max-width:none!important;height:auto!important;object-fit:contain;transform:none}
 .brand .wordmark{display:flex;position:static;transform:none;flex-direction:column;align-items:center;justify-content:center;color:#101722;line-height:1;text-align:center}
 .wordmark b{font-family:Georgia,"Times New Roman",serif;font-size:34px;letter-spacing:.03em}
 .wordmark em{margin-top:7px;font-style:normal;font-size:15px;font-weight:700;letter-spacing:.24em}
 @media(max-width:760px){
   header .brand{left:42%}
-  .brand img{width:130px}
+  .brand img{flex-basis:130px!important;width:130px!important;min-width:130px!important}
   .wordmark b{font-size:22px}
   .wordmark em{margin-top:4px;font-size:9px;letter-spacing:.18em}
 }
