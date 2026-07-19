@@ -1,4 +1,4 @@
-header{position:sticky;height:180px;min-height:180px}
+header{position:sticky;height:120px;min-height:120px}
 header .brand{position:absolute;left:50%;top:50%;display:flex;align-items:center;gap:0;transform:translate(-50%,-50%)}
 .brand img{position:static!important;flex:0 0 135px!important;width:135px!important;min-width:135px!important;max-width:none!important;height:auto!important;aspect-ratio:auto!important;object-fit:contain;transform:none}
 .brand .wordmark{display:flex;position:static;transform:none;flex-direction:column;align-items:center;justify-content:center;color:#101722;line-height:1;text-align:center}

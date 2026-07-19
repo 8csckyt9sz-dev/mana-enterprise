@@ -47,7 +47,7 @@ async function upload(req:Request,env:Env,url:URL){
  await env.DB.batch([env.DB.prepare('INSERT INTO stock_images(image_key,content_type,etag,data) VALUES(?,?,?,?)').bind(key,type,etag,bytes),env.DB.prepare(`UPDATE ${table(kind)} SET image_key=?,updated_at=CURRENT_TIMESTAMP WHERE id=?`).bind(key,id),...(row.image_key?[env.DB.prepare('DELETE FROM stock_images WHERE image_key=?').bind(row.image_key)]:[])]);
  return response({image_key:key,url:`/images/${key}`});
 }
-async function imageRoute(env:Env,key:string,req:Request){const obj:any=await env.DB.prepare('SELECT content_type,etag,data FROM stock_images WHERE image_key=?').bind(key).first();if(!obj)return new Response('Not found',{status:404});const headers={'content-type':String(obj.content_type),'etag':String(obj.etag),'cache-control':'public, max-age=86400, stale-while-revalidate=604800'};if(req.headers.get('if-none-match')===obj.etag)return new Response(null,{status:304,headers});return new Response(obj.data,{headers});}
+async function imageRoute(env:Env,key:string,req:Request){const obj:any=await env.DB.prepare('SELECT content_type,etag,data FROM stock_images WHERE image_key=?').bind(key).first();if(!obj)return new Response('Not found',{status:404});const body=obj.data instanceof ArrayBuffer?new Uint8Array(obj.data):Uint8Array.from(obj.data as ArrayLike<number>);const headers={'content-type':String(obj.content_type),'content-length':String(body.byteLength),'etag':String(obj.etag),'cache-control':'public, max-age=86400, stale-while-revalidate=604800'};if(req.headers.get('if-none-match')===obj.etag)return new Response(null,{status:304,headers});return new Response(body,{headers});}
 
 export default {async fetch(req:Request,env:Env):Promise<Response>{
  const url=new URL(req.url);
@@ -60,6 +60,6 @@ export default {async fetch(req:Request,env:Env):Promise<Response>{
   if(url.pathname.startsWith('/admin/api/'))return await api(req,env,url);
   if(url.pathname.startsWith('/admin/')&&!await sessionValid(req,env))return loginPage();
   if(url.pathname.startsWith('/images/'))return imageRoute(env,decodeURIComponent(url.pathname.slice(8)),req);
-  return env.ASSETS.fetch(req);
+  const asset=await env.ASSETS.fetch(req);if((asset.headers.get('content-type')||'').includes('text/html')){const headers=new Headers(asset.headers);headers.set('cache-control','no-store');return new Response(asset.body,{status:asset.status,statusText:asset.statusText,headers});}return asset;
  }catch(e){if(e instanceof Response)return e;console.error(e);return response({error:'サーバーエラーが発生しました'},500);}
 }} satisfies ExportedHandler<Env>;

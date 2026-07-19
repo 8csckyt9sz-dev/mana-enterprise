@@ -10,11 +10,7 @@
 	"assets": {
 		"directory": "./dist",
 		"binding": "ASSETS",
-		"run_worker_first": [
-			"/api/*",
-			"/admin/*",
-			"/images/*"
-		]
+		"run_worker_first": true
 	},
 	"d1_databases": [
 		{
