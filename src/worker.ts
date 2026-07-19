@@ -62,8 +62,8 @@ export default {async fetch(req:Request,env:Env):Promise<Response>{
   if(url.pathname==='/admin')return Response.redirect(`${url.origin}/admin/`,301);
   if(url.pathname==='/api/cars')return response(await list(env,'cars'));
   if(url.pathname==='/api/goods')return response(await list(env,'goods'));
-  if(url.pathname.startsWith('/admin/api/upload/'))return upload(req,env,url);
-  if(url.pathname.startsWith('/admin/api/'))return api(req,env,url);
+  if(url.pathname.startsWith('/admin/api/upload/'))return await upload(req,env,url);
+  if(url.pathname.startsWith('/admin/api/'))return await api(req,env,url);
   if(url.pathname.startsWith('/admin/'))await requireAdmin(req,env);
   if(url.pathname.startsWith('/images/'))return imageRoute(env,decodeURIComponent(url.pathname.slice(8)),req);
   return env.ASSETS.fetch(req);
