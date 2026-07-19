@@ -1,6 +1,4 @@
-import { createRemoteJWKSet, jwtVerify } from 'jose';
-
-interface Env { DB:D1Database; ASSETS:Fetcher; ADMIN_EMAIL:string; CF_ACCESS_TEAM_DOMAIN:string; CF_ACCESS_AUD:string }
+interface Env { DB:D1Database; ASSETS:Fetcher; ADMIN_PASSWORD:string; SESSION_SECRET:string }
 type Kind='cars'|'goods';
 const JSON_HEADERS={'content-type':'application/json; charset=utf-8','cache-control':'no-store'};
 const response=(data:unknown,status=200)=>new Response(JSON.stringify(data),{status,headers:JSON_HEADERS});
@@ -9,18 +7,13 @@ const columns=(kind:Kind)=>kind==='cars'
  ? ['name','category','model_year','mileage','price','status','display_order']
  : ['name','category','condition','description','price','status','display_order'];
 
-async function requireAdmin(req:Request,env:Env){
- const token=req.headers.get('Cf-Access-Jwt-Assertion');
- if(!token||!env.ADMIN_EMAIL||!env.CF_ACCESS_TEAM_DOMAIN||!env.CF_ACCESS_AUD) throw new Response('Unauthorized',{status:401});
- const domain=env.CF_ACCESS_TEAM_DOMAIN.replace(/^https?:\/\//,'').replace(/\/$/,'');
- try{
-  const jwks=createRemoteJWKSet(new URL(`https://${domain}/cdn-cgi/access/certs`));
-  const {payload}=await jwtVerify(token,jwks,{issuer:`https://${domain}`,audience:env.CF_ACCESS_AUD});
-  const email=String(payload.email||'').toLowerCase();
-  if(email!==env.ADMIN_EMAIL.trim().toLowerCase()) throw new Error('email');
-  return email;
- }catch{throw new Response('Unauthorized',{status:401});}
-}
+const enc=new TextEncoder();
+const b64=(bytes:Uint8Array)=>btoa(String.fromCharCode(...bytes)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+async function sign(value:string,secret:string){const key=await crypto.subtle.importKey('raw',enc.encode(secret),{name:'HMAC',hash:'SHA-256'},false,['sign']);return b64(new Uint8Array(await crypto.subtle.sign('HMAC',key,enc.encode(value))));}
+async function sessionValid(req:Request,env:Env){const raw=req.headers.get('cookie')?.match(/(?:^|;\s*)mana_admin=([^;]+)/)?.[1];if(!raw||!env.SESSION_SECRET)return false;const [expires,sig]=raw.split('.');if(!expires||!sig||Number(expires)<Date.now())return false;return sig===await sign(expires,env.SESSION_SECRET);}
+async function requireAdmin(req:Request,env:Env){if(!await sessionValid(req,env))throw new Response('Unauthorized',{status:401});}
+const loginPage=(error=false)=>new Response(`<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>管理者ログイン</title><style>body{margin:0;background:#eef1f5;font-family:sans-serif;display:grid;place-items:center;min-height:100vh;color:#172746}form{background:#fff;width:min(380px,calc(100% - 32px));padding:30px;border-radius:12px;box-shadow:0 12px 40px #142b5020}img{display:block;width:180px;height:90px;object-fit:contain;margin:auto}h1{font-size:22px}label{display:grid;gap:8px;font-weight:700}input{padding:12px;border:1px solid #bbb;border-radius:6px;font-size:16px}button{width:100%;margin-top:20px;padding:13px;border:0;border-radius:6px;background:#bd2638;color:#fff;font-weight:800}.error{color:#bd2638}</style></head><body><form method="post" action="/admin/api/login"><img src="/assets/logo.png" alt="MANA ENTERPRISES"><h1>在庫管理ログイン</h1>${error?'<p class="error">パスワードが違います。</p>':''}<label>管理者パスワード<input type="password" name="password" required autocomplete="current-password"></label><button>ログイン</button></form></body></html>`,{headers:{'content-type':'text/html; charset=utf-8','cache-control':'no-store'}});
+async function login(req:Request,env:Env,url:URL){if(req.method!=='POST')return loginPage();const form=await req.formData(),password=String(form.get('password')||'');if(!env.ADMIN_PASSWORD||password!==env.ADMIN_PASSWORD)return loginPage(true);const expires=String(Date.now()+8*60*60*1000),cookie=`mana_admin=${expires}.${await sign(expires,env.SESSION_SECRET)}; Path=/admin; HttpOnly; Secure; SameSite=Strict; Max-Age=28800`;return new Response(null,{status:303,headers:{location:`${url.origin}/admin/`,'set-cookie':cookie,'cache-control':'no-store'}});}
 async function list(env:Env,kind:Kind){return (await env.DB.prepare(`SELECT * FROM ${table(kind)} ORDER BY display_order ASC,id DESC`).all()).results;}
 function clean(kind:Kind,input:any){
  const allowed=columns(kind),out:any={};
@@ -62,9 +55,10 @@ export default {async fetch(req:Request,env:Env):Promise<Response>{
   if(url.pathname==='/admin')return Response.redirect(`${url.origin}/admin/`,301);
   if(url.pathname==='/api/cars')return response(await list(env,'cars'));
   if(url.pathname==='/api/goods')return response(await list(env,'goods'));
+  if(url.pathname==='/admin/api/login')return await login(req,env,url);
   if(url.pathname.startsWith('/admin/api/upload/'))return await upload(req,env,url);
   if(url.pathname.startsWith('/admin/api/'))return await api(req,env,url);
-  if(url.pathname.startsWith('/admin/'))await requireAdmin(req,env);
+  if(url.pathname.startsWith('/admin/')&&!await sessionValid(req,env))return loginPage();
   if(url.pathname.startsWith('/images/'))return imageRoute(env,decodeURIComponent(url.pathname.slice(8)),req);
   return env.ASSETS.fetch(req);
  }catch(e){if(e instanceof Response)return e;console.error(e);return response({error:'サーバーエラーが発生しました'},500);}
