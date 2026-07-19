@@ -1,3 +1,4 @@
+
 # マナエンタープライズ（株）
 
 Cloudflare Workers + D1 で動く中古車・中古家具家電の在庫サイトです。公開ページは誰でも閲覧でき、`/admin/` と `/admin/api/` はSecretパスワードと署名付きHttpOnly Cookieで保護します。画像もD1へ保存するためR2契約は不要です。
