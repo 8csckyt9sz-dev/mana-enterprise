@@ -1,0 +1,14 @@
+.language-switch{position:absolute;left:max(5vw,24px);bottom:10px;display:flex;gap:4px;padding:3px;border:1px solid #dfe3e9;border-radius:999px;background:#fff;box-shadow:0 2px 10px #152d5214}
+.language-switch button{border:0;border-radius:999px;background:transparent;color:var(--navy);padding:6px 10px;font:inherit;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap}
+.language-switch button.active{background:var(--navy);color:#fff}
+html[lang="si"] body{font-family:"Noto Sans Sinhala","Iskoola Pota","Nirmala UI","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif}
+html[lang="si"] header nav a{font-size:17px;white-space:normal;text-align:right;line-height:1.25}
+html[lang="si"] .hero h1,html[lang="si"] .subhero h1{letter-spacing:0;line-height:1.3}
+html[lang="si"] h2{line-height:1.35}
+@media(max-width:760px){
+  .language-switch{left:8px;bottom:6px}
+  .language-switch button{padding:4px 7px;font-size:9px}
+  html[lang="si"] header nav{max-width:150px}
+  html[lang="si"] header nav a{font-size:8px;line-height:1.2}
+  html[lang="si"] .hero h1,html[lang="si"] .subhero h1{font-size:34px}
+}
