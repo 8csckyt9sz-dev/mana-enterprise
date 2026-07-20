@@ -1,0 +1,285 @@
+:root{
+  font-family:"Yu Gothic","Noto Sans Sinhala",sans-serif;
+  color:#1c2638;
+  background:#f2f4f7
+}
+
+*{box-sizing:border-box}
+
+body{margin:0}
+
+button,input,select,textarea{font:inherit}
+
+.top{
+  padding:18px 4vw;
+  background:#142b50;
+  color:white;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px
+}
+
+.top h1{
+  font-size:20px;
+  margin:0;
+  line-height:1.4
+}
+
+.top-actions{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:14px
+}
+
+.top a{
+  color:white;
+  white-space:nowrap
+}
+
+.lang-switch{
+  display:flex;
+  padding:3px;
+  border:1px solid #ffffff66;
+  border-radius:8px;
+  background:#ffffff12
+}
+
+.lang-switch button{
+  border:0;
+  border-radius:5px;
+  padding:7px 10px;
+  color:white;
+  background:transparent;
+  font-weight:700;
+  cursor:pointer;
+  white-space:nowrap
+}
+
+.lang-switch button.active{
+  color:#142b50;
+  background:white
+}
+
+.wrap{
+  max-width:1100px;
+  margin:auto;
+  padding:30px 20px
+}
+
+.tabs{
+  display:flex;
+  gap:8px;
+  margin-bottom:20px
+}
+
+.tabs button,
+.primary{
+  border:0;
+  border-radius:7px;
+  padding:11px 18px;
+  font-weight:700;
+  cursor:pointer
+}
+
+.tabs button.active,
+.primary{
+  background:#bd2638;
+  color:white
+}
+
+.toolbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px
+}
+
+.toolbar small{
+  color:#687080;
+  font-weight:700;
+  letter-spacing:.08em
+}
+
+.toolbar h2{
+  margin:3px 0 0
+}
+
+.panel{
+  background:white;
+  border-radius:10px;
+  padding:20px;
+  box-shadow:0 3px 15px #0001
+}
+
+.item{
+  display:grid;
+  grid-template-columns:72px 1fr auto;
+  gap:14px;
+  align-items:center;
+  padding:13px 0;
+  border-bottom:1px solid #ddd
+}
+
+.item:last-child{border-bottom:0}
+
+.item img,
+.thumb{
+  width:72px;
+  height:58px;
+  object-fit:cover;
+  background:#eee;
+  border-radius:5px
+}
+
+.item p{
+  margin:4px 0;
+  color:#687080;
+  font-size:13px;
+  line-height:1.5
+}
+
+.actions{
+  display:flex;
+  gap:7px
+}
+
+.actions button{
+  padding:7px 10px;
+  background:white;
+  border:1px solid #bcc2cc;
+  border-radius:5px;
+  cursor:pointer
+}
+
+.danger{color:#b00020}
+
+dialog{
+  width:min(650px,calc(100% - 24px));
+  max-height:calc(100vh - 24px);
+  border:0;
+  border-radius:12px;
+  padding:0;
+  box-shadow:0 15px 70px #0005
+}
+
+dialog::backdrop{background:#0007}
+
+form{
+  padding:24px;
+  overflow:auto
+}
+
+form h2{margin-top:0}
+
+label{
+  display:grid;
+  gap:5px;
+  font-weight:700;
+  margin:12px 0
+}
+
+input,
+select,
+textarea{
+  width:100%;
+  padding:10px;
+  border:1px solid #bbb;
+  border-radius:5px;
+  background:white;
+  color:#1c2638
+}
+
+textarea{min-height:80px}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0 15px
+}
+
+.form-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:9px;
+  margin-top:22px
+}
+
+.form-actions button{
+  border-radius:7px;
+  padding:11px 18px;
+  font-weight:700;
+  cursor:pointer
+}
+
+.notice{
+  background:#fff5cd;
+  padding:12px;
+  border-radius:6px;
+  font-size:13px;
+  line-height:1.6
+}
+
+.empty{
+  text-align:center;
+  padding:50px 15px;
+  color:#687080
+}
+
+@media(max-width:760px){
+  .top{
+    align-items:flex-start;
+    flex-direction:column
+  }
+
+  .top-actions{
+    width:100%;
+    justify-content:space-between
+  }
+}
+
+@media(max-width:650px){
+  .wrap{padding:20px 12px}
+
+  .panel{padding:15px}
+
+  .tabs{
+    display:grid;
+    grid-template-columns:1fr 1fr
+  }
+
+  .tabs button{padding:10px 8px}
+
+  .item{
+    grid-template-columns:55px 1fr
+  }
+
+  .item img,
+  .thumb{
+    width:55px;
+    height:50px
+  }
+
+  .actions{grid-column:2}
+
+  .form-grid{grid-template-columns:1fr}
+
+  .toolbar{align-items:flex-end}
+
+  .toolbar h2{font-size:20px}
+
+  .top-actions{
+    align-items:flex-start;
+    flex-direction:column
+  }
+
+  .lang-switch{width:100%}
+
+  .lang-switch button{flex:1}
+
+  .form-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr
+  }
+}
